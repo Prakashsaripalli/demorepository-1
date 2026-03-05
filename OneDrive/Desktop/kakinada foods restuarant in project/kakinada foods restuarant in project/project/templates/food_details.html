@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ food.name }} - Details</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f6f8fb;
+            color: #1f2937;
+        }
+
+        .banner {
+            min-height: 300px;
+            padding: 40px 8%;
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .banner h1 {
+            margin: 0;
+            font-size: 42px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 16px 30px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 28px;
+        }
+
+        .ingredients {
+            margin: 0;
+            padding-left: 20px;
+            line-height: 1.9;
+            font-size: 16px;
+        }
+
+        .top-link {
+            display: inline-block;
+            margin-top: 18px;
+            text-decoration: none;
+            color: #fff;
+            background: #111827;
+            padding: 10px 14px;
+            border-radius: 10px;
+            width: fit-content;
+        }
+    </style>
+</head>
+<body>
+    <section class="banner" style="background-image: linear-gradient(120deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.35)), url('{{ detail_image }}');">
+        <h1>{{ food.name }}</h1>
+        <p>{{ food.description }}</p>
+        <a class="top-link" href="{{ url_for('home') }}">Back to Home</a>
+    </section>
+
+    <div class="container">
+        <div class="card">
+            <h2>Ingredients</h2>
+            <ul class="ingredients">
+                {% for item in ingredients %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

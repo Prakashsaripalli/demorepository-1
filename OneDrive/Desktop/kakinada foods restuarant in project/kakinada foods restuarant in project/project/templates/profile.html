@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at 12% 10%, rgba(255, 193, 118, 0.28), transparent 36%),
+                radial-gradient(circle at 88% 14%, rgba(120, 170, 255, 0.26), transparent 40%),
+                linear-gradient(140deg, #fff8f1 0%, #ffeedd 45%, #edf5ff 100%);
+            background-attachment: fixed;
+            color: #1f2937;
+        }
+
+        .wrap {
+            max-width: 1000px;
+            margin: 32px auto;
+            padding: 0 16px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-logout {
+            text-decoration: none;
+            background: #dc2626;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .label {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .value {
+            font-size: 18px;
+            margin-bottom: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px 8px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        th {
+            color: #374151;
+            background: #f9fafb;
+        }
+
+        .empty {
+            margin-top: 10px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .flash {
+            margin-bottom: 14px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .flash.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .flash.danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .flash.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .cancel-btn {
+            border: none;
+            padding: 7px 10px;
+            border-radius: 6px;
+            background: #ef4444;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .cancel-btn:hover {
+            background: #dc2626;
+        }
+
+        .admin-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .admin-form input,
+        .admin-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .admin-form textarea {
+            grid-column: 1 / -1;
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .admin-form .full {
+            grid-column: 1 / -1;
+        }
+
+        .admin-btn {
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: #111827;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            width: fit-content;
+        }
+
+        .admin-order-block {
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .table-title {
+            font-size: 18px;
+            margin: 0 0 8px;
+            color: #111827;
+        }
+
+        .table-total {
+            margin: 8px 0 14px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .table-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0 14px;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .paid-btn {
+            border: none;
+            padding: 8px 10px;
+            border-radius: 6px;
+            background: #16a34a;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .paid-btn:disabled {
+            background: #86efac;
+            color: #14532d;
+            cursor: default;
+        }
+
+        .remove-btn {
+            border: none;
+            padding: 8px 10px;
+            border-radius: 6px;
+            background: #ef4444;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="top-bar">
+            <h1>Your Profile</h1>
+            <div class="top-actions">
+                <a class="btn-logout" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="grid">
+            <div class="card">
+                <h2>{{ 'Admin Details' if is_admin else 'User Details' }}</h2>
+                <div class="label">Username</div>
+                <div class="value">{{ user.username if user else '-' }}</div>
+
+                <div class="label">Email</div>
+                <div class="value">{{ user.email if user else '-' }}</div>
+
+                {% if is_admin %}
+                    <div class="label">Role</div>
+                    <div class="value">{{ user.role }}</div>
+                {% endif %}
+            </div>
+
+            {% if is_admin %}
+                <div class="card">
+                    <h2>Create Item Details</h2>
+                    <form class="admin-form" action="{{ url_for('admin_create_item') }}" method="POST">
+                        <input type="text" name="name" placeholder="Item name" required>
+                        <input type="text" name="price" placeholder="Price" required>
+                        <textarea name="description" placeholder="Description" required></textarea>
+                        <input class="full" type="text" name="ingredients" placeholder="Ingredients (comma separated)">
+                        <input class="full" type="text" name="image_url" placeholder="Image URL (optional)">
+                        <button class="admin-btn full" type="submit">Create Item</button>
+                    </form>
+
+                    {% if created_items %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Price</th>
+                                    <th>Created At (UTC)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in created_items %}
+                                    <tr>
+                                        <td>{{ item.name }}</td>
+                                        <td>${{ item.price }}</td>
+                                        <td>{{ item.created_at }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="empty">No admin-created items yet.</div>
+                    {% endif %}
+
+                    <div class="admin-order-block">
+                        <h2>Order Details (Admin)</h2>
+                        {% if grouped_orders %}
+                            {% for group in grouped_orders %}
+                                <h3 class="table-title">Table {{ group.table_number }}</h3>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Price</th>
+                                            <th>Description</th>
+                                            <th>Ordered By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order in group.orders %}
+                                            <tr>
+                                                <td>{{ order.food_name }}</td>
+                                                <td>${{ order.price }}</td>
+                                                <td>{{ order.order_description }}</td>
+                                                <td>{{ order.username }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <div class="table-summary">
+                                    <div class="table-total">
+                                        Total Price (Table {{ group.table_number }}): ${{ group.total_price }}
+                                        {% if group.all_paid %}(Paid){% else %}(Unpaid){% endif %}
+                                    </div>
+                                    <div class="table-actions">
+                                        <form action="{{ url_for('admin_table_paid') }}" method="POST">
+                                            <input type="hidden" name="table_number" value="{{ group.table_number }}">
+                                            <button type="submit" class="paid-btn" {% if group.all_paid %}disabled{% endif %}>Paid</button>
+                                        </form>
+                                        <form action="{{ url_for('admin_table_remove') }}" method="POST">
+                                            <input type="hidden" name="table_number" value="{{ group.table_number }}">
+                                            <button type="submit" class="remove-btn">Remove</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="empty">No orders placed yet.</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="card">
+                    <h2>Order Details (Live)</h2>
+                    {% if orders %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Food</th>
+                                    <th>Price</th>
+                                    <th>Table</th>
+                                    <th>Description</th>
+                                    <th>Ordered At (UTC)</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                    <tr>
+                                        <td>{{ order.food_name }}</td>
+                                        <td>${{ order.price }}</td>
+                                        <td>{{ order.table_number }}</td>
+                                        <td>{{ order.order_description if order.order_description else '-' }}</td>
+                                        <td>{{ order.ordered_at }}</td>
+                                        <td>
+                                            <form action="{{ url_for('cancel_order', order_id=order._id) }}" method="POST">
+                                                <button type="submit" class="cancel-btn">Cancel</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="empty">No orders yet.</div>
+                    {% endif %}
+                </div>
+                {% endif %}
+        </div>
+    </div>
+</body>
+</html>

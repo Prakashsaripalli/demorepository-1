@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Contact Us - Food Haven</title>
+    <style>
+        /* Existing styles... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .header {
+            width: 100%;
+            height: 60px;
+            background-color: whitesmoke;
+        }
+
+        .top {
+            margin-left: 200px;
+            width: 40%;
+            height: 60px;
+            padding-top: 20px;
+            justify-content: space-between;
+        }
+
+        .lo {
+            display: flex;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .ul {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        nav ul li a.active {
+            border-bottom: 2px solid white;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-form h1 {
+            color: rgb(22, 95, 242);
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        .contact-form p {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .contact-form form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-form label {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .contact-form button {
+            padding: 15px;
+            font-size: 18px;
+            color: white;
+            background-color: rgb(22, 95, 242);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            background-color: #45a049;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .to {
+            margin-bottom: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .btn {
+            background-color: rgb(22, 95, 242);
+        }
+
+        /* New success message styles */
+        #successMessage {
+            display: none;
+            margin-top: 20px;
+            font-size: 18px;
+            color: green;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+            
+            const successMessage = document.getElementById('successMessage');
+            const form = event.target;
+            
+            // Display the success message
+            successMessage.style.display = 'block';
+            
+            // Clear the form fields
+            form.reset();
+        }
+    </script>
+</head>
+<body>
+
+    <header class="header">
+        <div class="top">
+            <ul class="ul">
+                <li class="lo"><a href="{{ url_for('home') }}">Home</a></li>
+                <li class="lo"><a href="{{ url_for('about') }}">About</a></li>
+                <li class="lo">Contact</li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="contact-form">
+        <h1>Contact Us</h1>
+        
+        <form action="submit_form.php" method="post" class="to" onsubmit="handleSubmit(event)">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+            
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+
+        <!-- Success message -->
+        <div id="successMessage">Contact success! Your message has been sent.</div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Food Haven. All rights reserved.</p>
+    </footer>
+    
+</body>
+</html>

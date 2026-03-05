@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        body.admin-mode {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                        url("{{ url_for('static', filename='images/foodie.jpg') }}")
+                        no-repeat center center/cover;
+        }
+
+        body.user-mode {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                        url("{{ url_for('static', filename='images/foodie.jpg') }}")
+                        no-repeat center center/cover;
+        }
+
+        .container {
+            width: 360px;
+            padding: 40px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            color: white;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .mode-switch {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .mode-btn.active {
+            background: #fff;
+            color: #111;
+        }
+
+        .container h2 {
+            margin-bottom: 30px;
+            font-weight: 600;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            box-shadow: 0 0 10px #ff9800;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            background: linear-gradient(45deg, #ff9800, #ff5722);
+            color: white;
+            transition: 0.3s ease;
+        }
+
+        body.user-mode .btn {
+            background: linear-gradient(45deg, #1d4ed8, #0ea5e9);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 87, 34, 0.6);
+        }
+
+        .toggle-link {
+            display: block;
+            margin-top: 18px;
+            color: #ffd54f;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+
+        .forgot-link {
+            display: block;
+            margin-top: 10px;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            opacity: 0.92;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .success { background-color: rgba(0, 255, 0, 0.2); }
+        .danger  { background-color: rgba(255, 0, 0, 0.2); }
+        .info    { background-color: rgba(0, 191, 255, 0.2); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="admin-mode">
+
+    <div class="container">
+        <div class="mode-switch">
+            <button type="button" class="mode-btn active" id="adminBtn">Admin</button>
+            <button type="button" class="mode-btn" id="userBtn">User</button>
+        </div>
+
+        <h2 id="loginTitle">Admin Login</h2>
+
+        <form method="POST">
+            <input type="hidden" name="login_mode" id="loginMode" value="admin">
+            <div class="form-group">
+                <label>Username or Email</label>
+                <input type="text" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn">Login</button>
+            </div>
+        </form>
+
+        <a href="{{ url_for('register') }}" class="toggle-link" id="toggleText" style="display: none;">
+            New user? Create account
+        </a>
+        <a href="{{ url_for('forgot_password') }}" class="forgot-link">Forgot Password?</a>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <script>
+        const body = document.body;
+        const adminBtn = document.getElementById('adminBtn');
+        const userBtn = document.getElementById('userBtn');
+        const loginTitle = document.getElementById('loginTitle');
+        const toggleText = document.getElementById('toggleText');
+        const loginMode = document.getElementById('loginMode');
+
+        adminBtn.addEventListener('click', function () {
+            body.classList.add('admin-mode');
+            body.classList.remove('user-mode');
+            adminBtn.classList.add('active');
+            userBtn.classList.remove('active');
+            loginTitle.textContent = 'Admin Login';
+            toggleText.style.display = 'none';
+            loginMode.value = 'admin';
+        });
+
+        userBtn.addEventListener('click', function () {
+            body.classList.add('user-mode');
+            body.classList.remove('admin-mode');
+            userBtn.classList.add('active');
+            adminBtn.classList.remove('active');
+            loginTitle.textContent = 'User Login';
+            toggleText.style.display = 'block';
+            toggleText.textContent = 'New user? Create account';
+            loginMode.value = 'user';
+        });
+    </script>
+
+</body>
+</html>

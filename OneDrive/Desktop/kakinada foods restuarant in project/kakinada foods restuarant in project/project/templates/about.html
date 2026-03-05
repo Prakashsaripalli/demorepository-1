@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+    <style>
+         *
+        {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+        .header
+        {
+            width: 100%;
+            height: 60px;
+            background-color: whitesmoke;
+            
+        }
+        .top
+        {
+            margin-left: 200px;
+            width: 40%;
+            height: 60px;
+            /* background-color: aqua; */
+            padding-top: 20px;
+            /* display: flex; */
+            justify-content: space-between;
+        }
+        .lo
+        {
+            display: flex;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .ul
+        {
+            display: flex;
+            justify-content: space-between;
+        }
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}
+/* header {
+    background-color: #4CAF50;
+    padding: 10px 0;
+} */
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+nav ul li a.active {
+    border-bottom: 2px solid white;
+}
+
+.about-us {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.about-us h1 {
+    color: #4CAF50;
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 30px;
+}
+
+.about-us h2 {
+    color: #333;
+    margin-top: 30px;
+    font-size: 28px;
+}
+
+.about-us p {
+    line-height: 1.6;
+    font-size: 18px;
+}
+
+.team {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.team-member {
+    text-align: center;
+}
+
+.team-member img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.team-member h3 {
+    margin-top: 15px;
+    font-size: 22px;
+    color: #4CAF50;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+footer p {
+    margin: 0;
+}
+.img
+{
+    width: 20%;
+}
+a
+{
+    text-decoration: none;
+    color: black;
+}
+
+    </style>
+</head>
+<body>
+
+    <header class="header">
+
+        <div class="top">
+            <ul class="ul">
+                <li class="lo"><a href="{{ url_for('home') }}">Home</a></li>
+                <li class="lo">About</li>
+                <li class="lo"><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </div>
+
+    </header>
+
+    <section>
+        <section class="about-us">
+            <h1>Kakinada Foods</h1>
+            <p>Welcome to Kakinada foods, where we celebrate the art of delicious, fresh, and locally-sourced food. Our mission is to bring people together over a shared love for culinary excellence. Whether you're here for a quick bite or a gourmet meal, we have something special for everyone.</p>
+    
+            <h2>Our Story</h2>
+            <p>Founded in 2020, Kakinada foods  started as a small family-owned restaurant in the heart of the kakinada city. Over the years, we've grown into a beloved dining spot known for our commitment to quality and innovation. Our chefs are passionate about creating dishes that not only taste great but also tell a story.</p>
+    
+            <h2>Our Philosophy</h2>
+            <p>We believe that food is more than just sustenance; it's an experience. That's why we source our ingredients from local farms and suppliers who share our dedication to sustainability and freshness. Every dish we serve is a reflection of our commitment to the community and the environment.</p>
+    
+            <h2>Meet Our Team</h2>
+            <div class="team">
+                <div class="team-member">
+                    <img src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=" alt="Chef John">
+                    <h3>K.Poornasiva</h3>
+                    <p>Executive Chef</p>
+                </div>
+                <div class="team-member">
+                    <img src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=" alt="Manager Jane">
+                    <h3>S.Prakash</h3>
+                    <p>General Manager</p>
+                </div>
+                <div class="team-member">
+                    <img src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=" alt="Pastry Chef">
+                    <h3>N.Prabhas</h3>
+                    <p>Pastry Chef</p>
+                    
+                </div>
+                <div class="team-member">
+                    <img src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=" alt="Pastry Chef">
+                    <h3>R.Subramanyam</h3>
+                    <p>Counter</p>
+                    
+                </div>
+            </div>
+        </section>
+    
+        <footer>
+            <p>&copy; 2026 Food Haven. All rights reserved.</p>
+        </footer>
+    </section>
+    
+</body>
+</html>

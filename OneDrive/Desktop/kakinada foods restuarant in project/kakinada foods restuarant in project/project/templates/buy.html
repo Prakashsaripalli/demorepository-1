@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Ordering</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #343a40;
+        }
+
+        .top-actions {
+            max-width: 600px;
+            margin: 0 auto 12px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #343a40;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            background-color: #23272b;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .messages ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .messages li {
+            background-color: #d4edda;
+            color: #155724;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+        }
+
+        .food-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background-color: #f1f3f5;
+        }
+
+        .food-item h2 {
+            margin: 0;
+            color: #495057;
+        }
+
+        .food-item p {
+            color: #6c757d;
+        }
+
+        .food-item form {
+            display: flex;
+            flex-direction: column;
+            row-gap: 10px;
+            margin-top: 10px;
+        }
+
+        .food-item button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .food-item button:hover {
+            background-color: #0056b3;
+        }
+        .buy
+        {
+            width: 100%;
+            height: 38px;
+            border-radius: 5px;
+            border: 1px solid #cbd5e1;
+            padding: 0 10px;
+            background-color: #fff;
+        }
+
+        .order-desc {
+            width: 100%;
+            min-height: 80px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            padding: 8px 10px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-actions">
+        <a class="back-btn" href="{{ url_for('home') }}">Back</a>
+    </div>
+    <h1>Food Ordering System</h1>
+
+    <div class="container">
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="messages">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% for food in foods %}
+            <div class="food-item">
+                <h2>{{ food.name }}</h2>
+                <p>Price: ${{ food.price }}</p>
+                <p>{{ food.description }}</p>
+                <form action="{{ url_for('buy') }}" method="POST">
+                    <input type="hidden" name="food_name" value="{{ food.name }}">
+                    <select class="buy" name="table_number" required>
+                        <option value="" disabled selected>Select Table Number</option>
+                        <option value="T1">Table 1</option>
+                        <option value="T2">Table 2</option>
+                        <option value="T3">Table 3</option>
+                        <option value="T4">Table 4</option>
+                        <option value="T5">Table 5</option>
+                        <option value="T6">Table 6</option>
+                        <option value="T7">Table 7</option>
+                        <option value="T8">Table 8</option>
+                        <option value="T9">Table 9</option>
+                        <option value="T10">Table 10</option>
+                    </select>
+                    <textarea class="order-desc" name="order_description" placeholder="Add description (optional)"></textarea>
+                    <button type="submit">Place Order</button>
+                </form>
+            </div>
+        {% endfor %}
+
+    </div>
+</body>
+</html>
