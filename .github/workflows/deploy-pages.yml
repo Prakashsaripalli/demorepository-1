@@ -28,13 +28,20 @@ jobs:
           YUBUS_API_BASE: ${{ vars.YUBUS_API_BASE }}
         run: |
           SITE_DIR="$(dirname "$(find . -name 'api-config.js' -print -quit)")"
+          ASSETS_DIR="$(find . -type d -name 'Assets' -print -quit)"
+
           if [ -z "$SITE_DIR" ]; then
             echo "Could not locate frontend site directory."
             exit 1
           fi
 
+          if [ -z "$ASSETS_DIR" ]; then
+            echo "Could not locate Assets directory."
+            exit 1
+          fi
+
           mkdir -p _site
-          cp -R "$SITE_DIR/Assets" _site/Assets
+          cp -R "$ASSETS_DIR" _site/Assets
           cp "$SITE_DIR"/*.html "$SITE_DIR"/*.css "$SITE_DIR"/*.js _site/
           touch _site/.nojekyll
 
