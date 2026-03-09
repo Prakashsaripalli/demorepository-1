@@ -26,8 +26,13 @@ jobs:
         shell: bash
         env:
           YUBUS_API_BASE: ${{ vars.YUBUS_API_BASE }}
-          SITE_DIR: OneDrive/??????/booking/Frontend
         run: |
+          SITE_DIR="$(dirname "$(find . -name 'api-config.js' -print -quit)")"
+          if [ -z "$SITE_DIR" ]; then
+            echo "Could not locate frontend site directory."
+            exit 1
+          fi
+
           mkdir -p _site
           cp -R "$SITE_DIR/Assets" _site/Assets
           cp "$SITE_DIR"/*.html "$SITE_DIR"/*.css "$SITE_DIR"/*.js _site/
