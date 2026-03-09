@@ -410,5 +410,15 @@ function googleLogin() {
 
 document.addEventListener("DOMContentLoaded", () => {
     seedLegacyUser();
+    document.getElementById("adminTab")?.addEventListener("click", () => switchRole("admin"));
+    document.getElementById("userTab")?.addEventListener("click", () => switchRole("user"));
+    document.getElementById("adminForm")?.addEventListener("submit", adminLogin);
+    document.getElementById("userForm")?.addEventListener("submit", loginUser);
+    document.getElementById("signupForm")?.addEventListener("submit", signupUser);
+    document.getElementById("adminForgotBtn")?.addEventListener("click", adminForgotPassword);
+    document.getElementById("userForgotBtn")?.addEventListener("click", forgotPassword);
+    document.getElementById("openSignupBtn")?.addEventListener("click", openSignup);
+    document.getElementById("closeSignupBtn")?.addEventListener("click", closeSignup);
+    document.getElementById("backToLoginBtn")?.addEventListener("click", closeSignup);
     switchRole("user");
 });
