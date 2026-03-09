@@ -15,8 +15,19 @@ function buildApiUrl(path, base) {
     return `${base}${path}`;
 }
 
+async function readJsonSafely(response) {
+    try {
+        return await response.json();
+    } catch (error) {
+        return {};
+    }
+}
+
 async function postWithFallback(path, payload) {
     let lastError;
+    let lastResponse;
+    let lastData = {};
+
     for (const base of API_BASES) {
         try {
             const response = await fetch(buildApiUrl(path, base), {
@@ -24,12 +35,27 @@ async function postWithFallback(path, payload) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             });
-            const data = await response.json().catch(() => ({}));
+            const data = await readJsonSafely(response);
+
+            if (!response.ok) {
+                lastResponse = response;
+                lastData = data;
+
+                if (response.status >= 500 || response.status === 404) {
+                    continue;
+                }
+            }
+
             return { response, data };
         } catch (error) {
             lastError = error;
         }
     }
+
+    if (lastResponse) {
+        return { response: lastResponse, data: lastData };
+    }
+
     throw lastError || new Error("Backend not reachable");
 }
 
@@ -343,23 +369,33 @@ async function loginUser(event) {
     }
 
     const users = getRegisteredUsers();
-    if (!users.length) {
-        alert("No user data found. Please sign up first.");
-        return;
-    }
-
     const matchedUser = users.find((user) => user.email === email && user.password === userPassword);
-    if (!matchedUser) {
+    let resolvedUser = matchedUser;
+
+    if (!resolvedUser) {
         const emailExists = users.some((user) => user.email === email);
-        alert(emailExists ? "Incorrect password." : "Email not found. Please sign up first.");
-        return;
+
+        if (emailExists) {
+            alert("Incorrect password.");
+            return;
+        }
+
+        resolvedUser = {
+            name: "",
+            mobile: "",
+            email,
+            password: userPassword
+        };
+
+        users.push(resolvedUser);
+        saveRegisteredUsers(users);
     }
 
     localStorage.removeItem("adminLoggedIn");
     localStorage.removeItem("adminIdentity");
     localStorage.removeItem("googleLogin");
     localStorage.setItem("userPassword", userPassword);
-    storeCurrentUserProfile(matchedUser);
+    storeCurrentUserProfile(resolvedUser);
     await sendEmailOtpAndNavigate(email);
 }
 

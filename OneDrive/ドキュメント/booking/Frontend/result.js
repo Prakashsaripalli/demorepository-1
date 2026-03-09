@@ -9,9 +9,21 @@ const API_BASES = window.YUBUS_API?.getBases?.() || [
 const FALLBACK_BUSES = Array.isArray(window.BUS_CATALOG) && window.BUS_CATALOG.length > 0
     ? window.BUS_CATALOG
     : [
-        { id: 1, name: "Yubus Express", fromCity: "Hyderabad", toCity: "Vijayawada", departureTime: "10:00 PM", price: 899 },
-        { id: 2, name: "Yubus Deluxe", fromCity: "Hyderabad", toCity: "Vijayawada", departureTime: "08:30 PM", price: 699 },
-        { id: 3, name: "Yubus Royal", fromCity: "Hyderabad", toCity: "Bangalore", departureTime: "09:00 PM", price: 1299 }
+        { id: 101, name: "Yubus Express", fromCity: "Hyderabad", toCity: "Vijayawada", departureTime: "06:30 AM", price: 899, busType: "AC Sleeper" },
+        { id: 102, name: "Yubus Deluxe", fromCity: "Hyderabad", toCity: "Vijayawada", departureTime: "10:00 PM", price: 699, busType: "Non-AC Seater" },
+        { id: 106, name: "Yubus Royal", fromCity: "Hyderabad", toCity: "Bangalore", departureTime: "05:30 PM", price: 1299, busType: "AC Sleeper" },
+        { id: 107, name: "Yubus Luxury", fromCity: "Hyderabad", toCity: "Bangalore", departureTime: "09:00 PM", price: 1599, busType: "AC Volvo" },
+        { id: 109, name: "Yubus Night Rider", fromCity: "Bangalore", toCity: "Hyderabad", departureTime: "06:15 PM", price: 1199, busType: "Sleeper" },
+        { id: 110, name: "Yubus Sapphire", fromCity: "Bangalore", toCity: "Hyderabad", departureTime: "09:45 PM", price: 1349, busType: "AC Sleeper" },
+        { id: 118, name: "Yubus Link", fromCity: "Bangalore", toCity: "Chennai", departureTime: "07:00 AM", price: 799, busType: "AC Seater" },
+        { id: 119, name: "Yubus Corridor", fromCity: "Bangalore", toCity: "Chennai", departureTime: "01:30 PM", price: 949, busType: "Sleeper" },
+        { id: 120, name: "Yubus Connect", fromCity: "Bangalore", toCity: "Chennai", departureTime: "10:30 PM", price: 1099, busType: "AC Sleeper" },
+        { id: 121, name: "Yubus Bay", fromCity: "Chennai", toCity: "Bangalore", departureTime: "06:30 AM", price: 829, busType: "AC Seater" },
+        { id: 122, name: "Yubus Velocity", fromCity: "Chennai", toCity: "Bangalore", departureTime: "09:45 PM", price: 999, busType: "Sleeper" },
+        { id: 123, name: "Yubus Temple", fromCity: "Bangalore", toCity: "Tirupati", departureTime: "09:00 PM", price: 899, busType: "AC Sleeper" },
+        { id: 124, name: "Yubus Pilgrim", fromCity: "Bangalore", toCity: "Tirupati", departureTime: "11:00 PM", price: 699, busType: "Non-AC Seater" },
+        { id: 137, name: "Yubus Pearl", fromCity: "Nellore", toCity: "Chennai", departureTime: "06:00 AM", price: 549, busType: "AC Seater" },
+        { id: 138, name: "Yubus Gateway", fromCity: "Nellore", toCity: "Chennai", departureTime: "05:15 PM", price: 449, busType: "Non-AC Seater" }
     ];
 
 const params = new URLSearchParams(window.location.search);
