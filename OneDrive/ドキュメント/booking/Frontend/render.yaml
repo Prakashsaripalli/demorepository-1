@@ -1,11 +1,10 @@
 services:
   - type: web
     name: yubus-backend
-    runtime: java
-    rootDir: backend-java
+    runtime: docker
     plan: free
-    buildCommand: mvn clean package
-    startCommand: java -jar target/backend-java-1.0.0.jar
+    dockerfilePath: OneDrive/ドキュメント/booking/Frontend/backend-java/Dockerfile
+    dockerContext: OneDrive/ドキュメント/booking/Frontend/backend-java
     envVars:
       - key: PORT
         value: 10000
