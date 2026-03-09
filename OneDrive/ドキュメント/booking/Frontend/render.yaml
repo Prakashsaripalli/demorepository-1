@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: yubus-backend
+    runtime: java
+    rootDir: backend-java
+    plan: free
+    buildCommand: mvn clean package
+    startCommand: java -jar target/backend-java-1.0.0.jar
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: ALLOWED_ORIGIN
+        sync: false
+      - key: DB_URL
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_APP_PASSWORD
+        sync: false
+      - key: SMTP_FROM
+        sync: false

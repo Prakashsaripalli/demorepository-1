@@ -1,0 +1,59 @@
+name: Deploy Frontend To GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare static site
+        shell: bash
+        env:
+          YUBUS_API_BASE: ${{ vars.YUBUS_API_BASE }}
+        run: |
+          mkdir -p _site
+          cp -R Assets _site/Assets
+          cp *.html *.css *.js _site/
+          touch _site/.nojekyll
+
+          API_BASE="${YUBUS_API_BASE:-}"
+          if [ -n "$API_BASE" ]; then
+            while IFS= read -r -d '' file; do
+              sed -i "s|<meta name=\"yubus-api-base\" content=\"\">|<meta name=\"yubus-api-base\" content=\"$API_BASE\">|g" "$file"
+            done < <(find _site -maxdepth 1 -name '*.html' -print0)
+          fi
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
