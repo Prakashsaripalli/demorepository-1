@@ -26,6 +26,15 @@ function updateAuthNav() {
 }
 
 updateAuthNav();
+const authNavLink = document.getElementById("authNavLink");
+if (authNavLink) {
+    authNavLink.addEventListener("click", (event) => {
+        if (!authNavLink.getAttribute("href")) {
+            event.preventDefault();
+            window.location.href = "login.html";
+        }
+    });
+}
 
 tabs.forEach(tab => {
     tab.addEventListener("click", () => {

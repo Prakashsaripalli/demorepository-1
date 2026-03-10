@@ -259,12 +259,25 @@ function renderBuses(buses) {
     });
 }
 
+const BUS_FETCH_TIMEOUT_MS = 8000;
+
+async function fetchWithTimeout(url, options = {}) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), BUS_FETCH_TIMEOUT_MS);
+
+    try {
+        return await fetch(url, { ...options, signal: controller.signal });
+    } finally {
+        clearTimeout(timeout);
+    }
+}
+
 async function fetchBuses() {
     let lastError;
 
     for (const base of API_BASES) {
         try {
-            const response = await fetch(
+            const response = await fetchWithTimeout(
                 `${buildApiUrl("/api/buses/search", base)}?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`
             );
             if (!response.ok) {
@@ -299,6 +312,9 @@ if (!from || !to) {
                 return;
             }
 
+            if (apiBuses.length === 0) {
+                setStatus(`Showing ${buses.length} local buses`, "");
+            }
             renderBuses(buses);
         })
         .catch(() => {
