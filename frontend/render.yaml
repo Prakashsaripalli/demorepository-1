@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: yubus-backend
+    runtime: docker
+    rootDir: frontend
+    plan: free
+    dockerfilePath: backend-java/Dockerfile
+    dockerContext: backend-java
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: ALLOWED_ORIGIN
+        sync: false
+      - key: DB_URL
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_APP_PASSWORD
+        sync: false
+      - key: SMTP_FROM
+        sync: false

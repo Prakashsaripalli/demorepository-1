@@ -1,0 +1,8 @@
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+backend-java/target/
+backend-java/*.log
+backend-java/*.class
+node_modules/
