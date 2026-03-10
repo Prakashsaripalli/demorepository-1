@@ -186,6 +186,21 @@ body {
     margin-top: 10px;
 }
 
+.payment-status {
+    margin-top: 10px;
+    min-height: 18px;
+    font-size: 13px;
+    color: #475467;
+}
+
+.payment-status.success {
+    color: #15803d;
+}
+
+.payment-status.error {
+    color: #c62828;
+}
+
 .payment-section {
     background: #ffffff;
     padding: 20px;

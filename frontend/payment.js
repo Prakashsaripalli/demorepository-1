@@ -47,6 +47,7 @@ const verifyWalletOtpBtn = document.getElementById("verifyWalletOtpBtn");
 const resendWalletOtpBtn = document.getElementById("resendWalletOtpBtn");
 const walletOtpStatus = document.getElementById("walletOtpStatus");
 const upiSection = document.getElementById("upiSection");
+const paymentStatus = document.getElementById("paymentStatus");
 const paymentSuccessOverlay = document.getElementById("paymentSuccessOverlay");
 const coinLane = document.getElementById("coinLane");
 const goHomeBtn = document.getElementById("goHomeBtn");
@@ -212,6 +213,19 @@ function setWalletStatus(message, variant) {
     }
 }
 
+function setPaymentStatus(message, variant) {
+    if (!paymentStatus) {
+        return;
+    }
+
+    paymentStatus.textContent = message;
+    paymentStatus.className = "payment-status";
+
+    if (variant) {
+        paymentStatus.classList.add(variant);
+    }
+}
+
 function toggleResendWalletOtp(show) {
     if (!resendWalletOtpBtn) {
         return;
@@ -355,11 +369,22 @@ function saveBookingHistory(bookingId, passengerName, passengerMobile, passenger
 }
 
 function playSuccessAnimationAndRedirect() {
+    if (!paymentSuccessOverlay) {
+        setPaymentStatus("Booking successful! Redirecting...", "success");
+        window.location.href = "index.html";
+        return;
+    }
+
     paymentSuccessOverlay.classList.remove("hidden");
 
     let launched = 0;
     const maxCoins = 36;
     const timer = setInterval(() => {
+        if (!coinLane) {
+            clearInterval(timer);
+            return;
+        }
+
         const coin = document.createElement("span");
         coin.className = "coin";
         coin.style.top = `${12 + Math.random() * 70}%`;
@@ -569,6 +594,8 @@ document.getElementById("payBtn").addEventListener("click", async function () {
     const bookingId = `BK${Date.now()}`;
     let paymentReference = "";
 
+    setPaymentStatus("", "");
+
     if (!passengerName || !passengerMobile || !passengerEmail) {
         alert("Please enter passenger details");
         return;
@@ -706,6 +733,7 @@ document.getElementById("payBtn").addEventListener("click", async function () {
 
     this.innerText = "Processing...";
     this.disabled = true;
+    setPaymentStatus("Processing payment...", "");
 
     try {
         const response = await postPayment({
@@ -729,7 +757,9 @@ document.getElementById("payBtn").addEventListener("click", async function () {
 
         const data = await response.json().catch(() => ({}));
         if (!response.ok || data.success === false) {
-            alert(data.message || "Payment failed");
+            const errorMessage = data.message || "Payment failed";
+            setPaymentStatus(errorMessage, "error");
+            alert(errorMessage);
             resetPayButton(this);
             return;
         }
@@ -742,8 +772,12 @@ document.getElementById("payBtn").addEventListener("click", async function () {
             paymentReference,
             paymentMethodLabel
         );
+        setPaymentStatus("Payment successful! Booking confirmed.", "success");
     } catch (error) {
-        alert(`Payment API error. Backend was not reachable at ${window.YUBUS_API?.describeTarget?.() || "the configured backend"}.\n${error?.message || "Unknown network error"}`);
+        const target = window.YUBUS_API?.describeTarget?.() || "the configured backend";
+        const errorMessage = `Payment API error. Backend was not reachable at ${target}.`;
+        setPaymentStatus(errorMessage, "error");
+        alert(`${errorMessage}\n${error?.message || "Unknown network error"}`);
         resetPayButton(this);
         return;
     }
