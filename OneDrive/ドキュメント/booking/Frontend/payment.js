@@ -73,12 +73,25 @@ function updateAmount() {
     document.getElementById("btnAmount").innerText = finalAmount;
 }
 
+const PAYMENT_FETCH_TIMEOUT_MS = 12000;
+
+async function fetchWithTimeout(url, options = {}) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), PAYMENT_FETCH_TIMEOUT_MS);
+
+    try {
+        return await fetch(url, { ...options, signal: controller.signal });
+    } finally {
+        clearTimeout(timeout);
+    }
+}
+
 async function postPayment(payload) {
     let lastNetworkError;
 
     for (const base of PAYMENT_API_BASES) {
         try {
-            return await fetch(buildPaymentApiUrl("/api/payment/process", base), {
+            return await fetchWithTimeout(buildPaymentApiUrl("/api/payment/process", base), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
