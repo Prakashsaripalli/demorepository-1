@@ -15,6 +15,8 @@ Default is MySQL JDBC:
 - `DB_USER=root`
 - `DB_PASSWORD=root123`
 
+`DB_URL` can also be provided as a `mysql://` URL; it will be normalized to JDBC automatically.
+
 Runtime configuration:
 
 - `PORT=8081`
@@ -29,6 +31,13 @@ For email OTP delivery, set:
 - `SMTP_USER=saisaripalli4988@gmail.com`
 - `SMTP_APP_PASSWORD=<gmail-app-password>`
 - `SMTP_FROM=saisaripalli4988@gmail.com` (optional)
+
+Optional SMTP overrides:
+
+- `SMTP_HOST` (default `smtp.gmail.com`)
+- `SMTP_PORT` (default `587`)
+- `SMTP_STARTTLS` (default `true` unless `SMTP_SSL=true`)
+- `SMTP_SSL` (default `true` when `SMTP_PORT=465`)
 
 ## Run
 

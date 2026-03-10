@@ -194,7 +194,11 @@ async function sendEmailOtpAndNavigate(email) {
         localStorage.removeItem("userOTPVerified");
         localStorage.setItem("loginType", "email");
         localStorage.setItem("otpMode", "api");
-        alert(`OTP sent to ${email}. Please check your email inbox/spam.`);
+        if (data?.emailSent === false && data?.message) {
+            alert(data.message);
+        } else {
+            alert(`OTP sent to ${email}. Please check your email inbox/spam.`);
+        }
         window.location.href = "otp.html";
         return true;
     } catch (error) {

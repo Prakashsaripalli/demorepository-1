@@ -13,8 +13,8 @@ import java.util.Properties;
 
 public final class EmailUtil {
 
-    private static final String SMTP_HOST = "smtp.gmail.com";
-    private static final String SMTP_PORT = "587";
+    private static final String DEFAULT_SMTP_HOST = "smtp.gmail.com";
+    private static final String DEFAULT_SMTP_PORT = "587";
 
     private EmailUtil() {
     }
@@ -187,15 +187,53 @@ public final class EmailUtil {
         Transport.send(message);
     }
 
+    public static String smtpConfigError() {
+        String smtpUser = System.getenv("SMTP_USER");
+        String smtpPassword = System.getenv("SMTP_APP_PASSWORD");
+
+        StringBuilder missing = new StringBuilder();
+        if (smtpUser == null || smtpUser.isBlank()) {
+            missing.append("SMTP_USER");
+        }
+        if (smtpPassword == null || smtpPassword.isBlank()) {
+            if (missing.length() > 0) {
+                missing.append(", ");
+            }
+            missing.append("SMTP_APP_PASSWORD");
+        }
+
+        if (missing.length() == 0) {
+            return null;
+        }
+
+        return "Missing SMTP configuration: " + missing;
+    }
+
     private static Session createSession() throws MessagingException {
         String smtpUser = requireEnv("SMTP_USER");
         String smtpPassword = requireEnv("SMTP_APP_PASSWORD");
+        String smtpHost = resolveSmtpHost();
+        String smtpPort = resolveSmtpPort();
+        boolean smtpSsl = resolveSmtpSsl(smtpPort);
+        boolean smtpStartTls = resolveStartTls(smtpSsl);
 
         Properties props = new Properties();
-        props.put("mail.smtp.host", SMTP_HOST);
-        props.put("mail.smtp.port", SMTP_PORT);
+        props.put("mail.smtp.host", smtpHost);
+        props.put("mail.smtp.port", smtpPort);
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.starttls.enable", String.valueOf(smtpStartTls));
+        if (smtpStartTls) {
+            props.put("mail.smtp.starttls.required", "true");
+        }
+        props.put("mail.smtp.connectiontimeout", "10000");
+        props.put("mail.smtp.timeout", "10000");
+        props.put("mail.smtp.writetimeout", "10000");
+        if (smtpSsl) {
+            props.put("mail.smtp.ssl.enable", "true");
+            props.put("mail.smtp.ssl.trust", smtpHost);
+        }
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2 TLSv1.3");
+        props.put("mail.smtp.ssl.checkserveridentity", "true");
 
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
@@ -209,6 +247,37 @@ public final class EmailUtil {
     private static String getFromEmail() {
         String smtpUser = System.getenv("SMTP_USER");
         return System.getenv().getOrDefault("SMTP_FROM", smtpUser);
+    }
+
+    private static String resolveSmtpHost() {
+        String host = System.getenv("SMTP_HOST");
+        return host == null || host.isBlank() ? DEFAULT_SMTP_HOST : host.trim();
+    }
+
+    private static String resolveSmtpPort() {
+        String port = System.getenv("SMTP_PORT");
+        return port == null || port.isBlank() ? DEFAULT_SMTP_PORT : port.trim();
+    }
+
+    private static boolean resolveSmtpSsl(String smtpPort) {
+        String raw = System.getenv("SMTP_SSL");
+        if (raw != null && !raw.isBlank()) {
+            return isTruthy(raw);
+        }
+        return "465".equals(smtpPort);
+    }
+
+    private static boolean resolveStartTls(boolean smtpSsl) {
+        String raw = System.getenv("SMTP_STARTTLS");
+        if (raw != null && !raw.isBlank()) {
+            return isTruthy(raw);
+        }
+        return !smtpSsl;
+    }
+
+    private static boolean isTruthy(String raw) {
+        String normalized = raw.trim().toLowerCase();
+        return normalized.equals("true") || normalized.equals("1") || normalized.equals("yes") || normalized.equals("y");
     }
 
     private static String requireEnv(String name) throws MessagingException {

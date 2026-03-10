@@ -2,7 +2,7 @@ services:
   - type: web
     name: yubus-backend
     runtime: docker
-    rootDir: OneDrive/ドキュメント/booking/Frontend
+    rootDir: Frontend
     plan: free
     dockerfilePath: backend-java/Dockerfile
     dockerContext: backend-java

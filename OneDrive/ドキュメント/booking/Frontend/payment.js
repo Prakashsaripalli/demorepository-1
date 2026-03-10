@@ -150,7 +150,7 @@ function formatCardExpiry(value) {
 }
 
 function isValidTransactionId(value) {
-    return /^[A-Z]{1,4}\d{22}$/.test(value);
+    return /^[A-Za-z0-9-]{6,64}$/.test(value);
 }
 
 function isTransactionIdAlreadyUsed(value) {
@@ -593,7 +593,7 @@ document.getElementById("payBtn").addEventListener("click", async function () {
             }
 
             if (!isValidTransactionId(normalizedTransactionId)) {
-                alert("Transaction ID must have 1 to 4 starting letters and exactly 22 numbers after that.");
+                alert("Transaction ID must be 6-64 characters using letters, numbers, or hyphen.");
                 transactionIdInput.focus();
                 transactionIdInput.select();
                 return;

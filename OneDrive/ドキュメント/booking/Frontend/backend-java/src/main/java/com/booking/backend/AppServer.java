@@ -12,6 +12,7 @@ import com.booking.backend.servlet.PopularRoutesServlet;
 import com.booking.backend.servlet.ProfileServlet;
 import com.booking.backend.servlet.SendOtpServlet;
 import com.booking.backend.servlet.VerifyOtpServlet;
+import com.booking.backend.utils.EmailUtil;
 import com.booking.backend.utils.JdbcUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -37,6 +38,10 @@ public class AppServer {
         Server server = new Server(port);
 
         JdbcUtil.initSchema();
+        String smtpWarning = EmailUtil.smtpConfigError();
+        if (smtpWarning != null) {
+            System.out.println("[Warning] " + smtpWarning + ". Email delivery will fail until configured.");
+        }
 
         BusDao busDao = new BusDao();
         LoginDao loginDao = new LoginDao();
