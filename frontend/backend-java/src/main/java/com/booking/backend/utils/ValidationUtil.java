@@ -4,8 +4,8 @@ import java.util.regex.Pattern;
 
 public final class ValidationUtil {
 
-    private static final Pattern MOBILE_PATTERN = Pattern.compile("^\\+91[6-9]\\d{9}$");
-    private static final Pattern MOBILE_10_PATTERN = Pattern.compile("^[6-9]\\d{9}$");
+    private static final Pattern MOBILE_PATTERN = Pattern.compile("^\\+91\\d{10}$");
+    private static final Pattern MOBILE_10_PATTERN = Pattern.compile("^\\d{10}$");
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$");
     private static final Pattern OTP_PATTERN = Pattern.compile("^\\d{6}$");
     private static final Pattern TRANSACTION_ID_PATTERN = Pattern.compile("^[A-Za-z]{1,4}\\d{22}$");
